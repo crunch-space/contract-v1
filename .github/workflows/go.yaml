@@ -35,11 +35,11 @@ jobs:
       - run: yarn exportABI
       - run: ls
       - name: Generate golang code
-        run: yarn generate-go
+        run: abigen --abi=abi/SoulBoundToken.json --pkg=contractV1 --out=contract.go
       - name: ls
         run: ls
       - name: git add golang files
-        run: git add -f elevatrix.go
+        run: git add -f contract.go
       - uses: stefanzweifel/git-auto-commit-action@v4
         id: commit
         with:
