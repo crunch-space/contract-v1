@@ -34,7 +34,6 @@ jobs:
       - run: cp .env.example .env
       - run: yarn exportABI
       - run: ls
-      - run: yarn clean
       - name: Generate golang code
         run: yarn generate-go
       - name: ls
