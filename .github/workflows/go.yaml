@@ -1,0 +1,59 @@
+# This is a basic workflow that is manually triggered
+
+name: generate golang code v0.1.x
+env:
+  APPVERSION: v0.1.${{ github.run_number }}
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  greet:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          # registry-url: https://npm.pkg.github.com/
+      #   - name: Add pkg token
+      #     run: |
+      #   echo "//npm.pkg.github.com/:_authToken=${{ github.token }}" > ~/.npmrc
+      - run: yarn install
+      # - name: get solce
+      #   uses: pontem-network/get-solc@master
+      - uses: gacts/install-geth-tools@v1
+      - run: cp .env.example .env
+      - run: yarn exportABI
+      - run: ls
+      - run: yarn clean
+      - name: Generate golang code
+        run: yarn generate-go
+      - name: ls
+        run: ls
+      - name: git add golang files
+        run: git add -f elevatrix.go
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        id: commit
+        with:
+          branch: golang/${{ env.APPVERSION }}
+          create_branch: true
+          commit_message: "Update generated code"
+      - name: GH Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          tag_name: ${{ env.APPVERSION  }}
+          target_commitish: ${{ steps.commit.outputs.commit_hash }}
+      - name: Delete branch
+        uses: dawidd6/action-delete-branch@v3.1.0
+        with:
+          github_token: ${{github.token}}
+          branches: golang/${{ env.APPVERSION }}

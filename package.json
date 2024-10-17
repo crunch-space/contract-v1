@@ -1,5 +1,5 @@
 {
-  "name": "contract-v1",
+  "name": "@crunch-space/contractV1",
   "version": "1.0.0",
   "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.",
   "main": "index.js",
@@ -18,7 +18,9 @@
     "@kaiachain/contracts": "^1.0.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "exportABI": "hardhat exportABI --contract SoulBoundToken",
+    "generate-go": "hardhat exportABI --contract SoulBoundToken && abigen --abi=abi/SoulBoundToken.json --pkg=contractV1 --out=contract.go"
   },
   "keywords": [],
   "author": "",
