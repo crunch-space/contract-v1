@@ -13,11 +13,12 @@ contract SoulBoundToken is KIP17, Ownable {
 
     constructor() KIP17("SoulBoundToken", "SBT") {}
 
-    function mint(address to) public payable {
-        require(
-            balanceOf(to) == 0,
-            "This address already has a SoulBoundToken"
-        );
+    function mint() public payable {
+        address to = msg.sender;
+        // require(
+        //     balanceOf(to) == 0,
+        //     "This address already has a SoulBoundToken"
+        // );
         require(msg.value >= price, "Insufficient funds");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();

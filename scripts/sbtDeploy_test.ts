@@ -14,7 +14,12 @@ async function main() {
   const tx = await sbtContract.setPrice(ethers.parseEther("0.1"));
   const hs = await tx.wait();
   console.log(`setPrice tx hash: ${hs}`);
-
+  const minthx = await (
+    await sbtContract.mint({
+      value: ethers.parseEther("0.1"),
+    })
+  ).wait();
+  console.log(`mint tx hash: ${minthx}`);
   await run("verify:verify", {
     address: sbtContract.target,
     contract: "contracts/SoulBoundToken.sol:SoulBoundToken",
